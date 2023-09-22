@@ -83,5 +83,5 @@ func DeleteCurso(c *gin.Context) {
 		log.Fatal(err)
 		return
 	}
-	c.IndentedJSON(http.StatusNoContent, "Curso deletado")
+	c.JSON(http.StatusNoContent, "Curso deletado")
 }
