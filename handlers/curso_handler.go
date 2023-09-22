@@ -37,6 +37,7 @@ func CreateCurso(c *gin.Context) {
 func GetAllCursos(c *gin.Context) {
 	var cursos []models.Curso
 	db, err := sql.Open("sqlite3", "database.db")
+
 	if err != nil {
 		log.Fatal(err)
 		return
@@ -49,12 +50,13 @@ func GetAllCursos(c *gin.Context) {
 	rows, err := db.Query(sqlStmt)
 	if err != nil {
 		log.Fatal(err)
-		return
 	}
 
+	defer rows.Close()
+
+	var curso models.Curso
 	for rows.Next() {
-		var curso models.Curso
-		scanErr := rows.Scan(&curso)
+		scanErr := rows.Scan(&curso.ID, &curso.Curso)
 
 		if scanErr != nil {
 			log.Fatal(scanErr)
