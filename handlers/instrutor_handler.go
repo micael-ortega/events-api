@@ -34,5 +34,9 @@ func GetAllInstrutores(c *gin.Context){
 		}
 		instrutores = append(instrutores, instrutor)
 	}
-	c.JSON(http.StatusOK, instrutores)
+	c.IndentedJSON(http.StatusOK, instrutores)
+}
+
+func CreateInstrutor (c *gin.Context){
+	
 }
