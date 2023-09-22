@@ -31,7 +31,7 @@ func CreateCurso(c *gin.Context) {
 
 func GetAllCursos(c *gin.Context) {
 	var cursos []models.Curso
-	db, err := sql.Open("sqlite3", "../../database.db")
+	db, err := sql.Open("sqlite3", "../database.db")
 	if err != nil {
 		log.Fatal(err)
 		return
