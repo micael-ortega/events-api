@@ -63,7 +63,13 @@ func CreateCurso(c *gin.Context) {
 	c.IndentedJSON(http.StatusCreated, novoCurso)
 }
 
-func DeleteCurso(c *gin.Context, id int16) {
+func DeleteCurso(c *gin.Context) {
+	var id int16 
+
+	if err := c.ShouldBindJSON(&id); err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		return
+	}
 
 	db := internals.OpenDb()
 
@@ -77,6 +83,5 @@ func DeleteCurso(c *gin.Context, id int16) {
 		log.Fatal(err)
 		return
 	}
-
 	c.IndentedJSON(http.StatusNoContent, "Curso deletado")
 }
