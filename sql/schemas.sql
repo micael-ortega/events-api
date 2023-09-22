@@ -1,0 +1,5 @@
+CREATE TABLE IF NOT EXISTS curso(
+  id INT PRIMARY KEY,
+  curso TEXT NOT NULL
+);
+
