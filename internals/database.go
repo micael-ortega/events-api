@@ -10,7 +10,6 @@ func OpenDb() *sql.DB {
 
 	if err != nil {
 		log.Fatal(err)
-		panic(err)
 	}
 
 	return db
