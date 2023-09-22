@@ -2,7 +2,7 @@
 
 ## About me
 
-First I want to know how to ask questions that drives people asking themselves where does this comes from or where it's going to take me, why it's so relevant?  I want to know how to effectivly ask questions.
+First I want to know how to ask questions that drives people wondering about where does this comes from or where it's going to take me, why it's so relevant?  I want to know how to effectivly ask questions.
 
 ## About the repository
 
