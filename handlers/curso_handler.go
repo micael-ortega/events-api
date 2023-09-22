@@ -14,7 +14,7 @@ func CreateCurso(c *gin.Context) {
 
 	var novoCurso models.Curso
 
-	db, err := sql.Open("sqlite3", "../../database.db")
+	db, err := sql.Open("sqlite3", "database.db")
 
 	if err != nil {
 		log.Fatal(err)
@@ -26,12 +26,17 @@ func CreateCurso(c *gin.Context) {
 
 	_, err = db.Exec(sqlStmt, novoCurso.Curso)
 
+	if err != nil {
+		log.Fatal(err)
+		return
+	}
+
 	c.IndentedJSON(http.StatusCreated, novoCurso)
 }
 
 func GetAllCursos(c *gin.Context) {
 	var cursos []models.Curso
-	db, err := sql.Open("sqlite3", "../database.db")
+	db, err := sql.Open("sqlite3", "database.db")
 	if err != nil {
 		log.Fatal(err)
 		return
