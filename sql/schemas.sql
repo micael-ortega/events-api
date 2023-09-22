@@ -11,7 +11,7 @@ CREATE TABLE IF NOT EXISTS instrutor(
 CREATE TABLE IF NOT EXISTS participante(
   id INTEGER PRIMARY KEY,
   nome TEXT NOT NULL,
-  cpf TEXT NOT NUL,
+  cpf TEXT NOT NULl,
   funcao TEXT NOT NULL,
   diretoria TEXT NOT NULL,
   empresa  TEXT NOT NULL,
@@ -26,7 +26,7 @@ CREATE TABLE IF NOT EXISTS evento(
  duracao REAL NOT NULL,
  instrutor_id  INTEGER NOT NULL,
  curso_id INTEGER NOT NULL,
- FOREIGN KEY (intrutor_id) REFERENCES instrutor(id),
+ FOREIGN KEY (instrutor_id) REFERENCES instrutor(id),
  FOREIGN KEY (curso_id) REFERENCES curso(id)
 );
 

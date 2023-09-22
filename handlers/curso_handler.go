@@ -2,11 +2,12 @@ package handlers
 
 import (
 	"database/sql"
+	"log"
+	"net/http"
+
 	"github.com/gin-gonic/gin"
 	_ "github.com/mattn/go-sqlite3"
 	"github.com/micael-ortega/eventos-api/models"
-	"log"
-	"net/http"
 )
 
 func CreateCurso(c *gin.Context) {
@@ -29,7 +30,7 @@ func CreateCurso(c *gin.Context) {
 }
 
 func GetAllCursos(c *gin.Context) {
-	var result []models.Curso
+	var cursos []models.Curso
 	db, err := sql.Open("sqlite3", "../../database.db")
 	if err != nil {
 		log.Fatal(err)
@@ -43,10 +44,19 @@ func GetAllCursos(c *gin.Context) {
 	rows, err := db.Query(sqlStmt)
 	if err != nil {
 		log.Fatal(err)
+		return
 	}
 
 	for rows.Next() {
+		var curso models.Curso
+		scanErr := rows.Scan(&curso)
 
+		if scanErr != nil {
+			log.Fatal(scanErr)
+			return
+		}
+		cursos = append(cursos, curso)
 	}
+	c.JSON(http.StatusOK, cursos)
 
 }
