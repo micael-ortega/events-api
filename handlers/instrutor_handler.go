@@ -34,7 +34,7 @@ func GetAllInstrutores(c *gin.Context) {
 		}
 		instrutores = append(instrutores, instrutor)
 	}
-	c.IndentedJSON(http.StatusOK, instrutores)
+	c.JSON(http.StatusOK, instrutores)
 }
 
 func CreateInstrutor(c *gin.Context) {
@@ -58,6 +58,29 @@ func CreateInstrutor(c *gin.Context) {
 		return
 	}
 
-	c.IndentedJSON(http.StatusCreated, novoInstrutor)
+	c.JSON(http.StatusCreated, novoInstrutor)
+}
 
+func DeleteInstrutor(c *gin.Context){
+	var id int16
+
+	if err :=c.ShouldBindJSON(&id); err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		return
+	}
+
+	db := internals.OpenDb()
+
+	defer db.Close()
+
+	sqlStmt := "DELETE FROM instrutor WHERE id = (?)"
+
+	_,err :=db.Exec(sqlStmt, id)
+
+	if err != nil {
+		log.Fatal(err)
+		return
+	}
+
+	c.JSON(http.StatusNoContent, )
 }
