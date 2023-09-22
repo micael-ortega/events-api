@@ -1,47 +1,18 @@
 package handlers
 
 import (
-	"database/sql"
 	"log"
 	"net/http"
 
 	"github.com/gin-gonic/gin"
 	_ "github.com/mattn/go-sqlite3"
+	"github.com/micael-ortega/eventos-api/internals"
 	"github.com/micael-ortega/eventos-api/models"
 )
 
-func CreateCurso(c *gin.Context) {
-
-	var novoCurso models.Curso
-
-	db, err := sql.Open("sqlite3", "database.db")
-
-	if err != nil {
-		log.Fatal(err)
-	}
-
-	defer db.Close()
-
-	sqlStmt := "INSERT INTO TABLE curso(curso) VALUES(?)"
-
-	_, err = db.Exec(sqlStmt, novoCurso.Curso)
-
-	if err != nil {
-		log.Fatal(err)
-		return
-	}
-
-	c.IndentedJSON(http.StatusCreated, novoCurso)
-}
-
 func GetAllCursos(c *gin.Context) {
 	var cursos []models.Curso
-	db, err := sql.Open("sqlite3", "database.db")
-
-	if err != nil {
-		log.Fatal(err)
-		return
-	}
+	db := internals.OpenDb()
 
 	defer db.Close()
 
@@ -64,6 +35,48 @@ func GetAllCursos(c *gin.Context) {
 		}
 		cursos = append(cursos, curso)
 	}
-	c.JSON(http.StatusOK, cursos)
+	c.IndentedJSON(http.StatusOK, cursos)
 
+}
+
+func CreateCurso(c *gin.Context) {
+	var novoCurso models.Curso
+
+	if err := c.ShouldBindJSON(&novoCurso); err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		return
+	}
+
+	db := internals.OpenDb()
+
+	defer db.Close()
+
+	sqlStmt := "INSERT INTO curso (curso) VALUES (?)"
+
+	_, err := db.Exec(sqlStmt, novoCurso.Curso)
+
+	if err != nil {
+		log.Fatal(err)
+		return
+	}
+
+	c.IndentedJSON(http.StatusCreated, novoCurso)
+}
+
+func DeleteCurso(c *gin.Context, id int16) {
+
+	db := internals.OpenDb()
+
+	defer db.Close()
+
+	sqlStmt := "DELETE FROM curso WHERE id = (?)"
+
+	_, err := db.Exec(sqlStmt, id)
+
+	if err != nil {
+		log.Fatal(err)
+		return
+	}
+
+	c.IndentedJSON(http.StatusNoContent, "Curso deletado")
 }
