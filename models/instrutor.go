@@ -1,6 +1,6 @@
 package models
 
-type instrutor struct {
+type Instrutor struct {
 	ID   int    `json:"id"`
-	nome string `json:"nome"`
+	Nome string `json:"nome"`
 }

@@ -1,6 +1,6 @@
-package main
+package models
 
-type curso struct {
+type Curso struct {
 	ID    int    `json:"id"`
 	Curso string `json:"curso"`
 }

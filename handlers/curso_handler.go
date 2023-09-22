@@ -1,16 +1,17 @@
-package main
+package handlers
 
 import (
 	"database/sql"
-	"log"
-	"net/http"
 	"github.com/gin-gonic/gin"
 	_ "github.com/mattn/go-sqlite3"
+	"github.com/micael-ortega/eventos-api/models"
+	"log"
+	"net/http"
 )
 
-func createCurso(c *gin.Context) {
+func CreateCurso(c *gin.Context) {
 
-	var novoCurso curso
+	var novoCurso models.Curso
 
 	db, err := sql.Open("sqlite3", "../../database.db")
 
@@ -22,26 +23,30 @@ func createCurso(c *gin.Context) {
 
 	sqlStmt := "INSERT INTO TABLE curso(curso) VALUES(?)"
 
-	_, err = db.Exec(sqlStmt, novoCurso.curso)
-	
+	_, err = db.Exec(sqlStmt, novoCurso.Curso)
 
-	c.IndentedJSON(http.StatusCreated)
+	c.IndentedJSON(http.StatusCreated, novoCurso)
 }
 
-func getAllCursos(c *gin.Context){
-	var result []curso
+func GetAllCursos(c *gin.Context) {
+	var result []models.Curso
 	db, err := sql.Open("sqlite3", "../../database.db")
 	if err != nil {
 		log.Fatal(err)
+		return
 	}
 
 	defer db.Close()
 
 	sqlStmt := "SELECT * FROM curso"
 
-	_, err = db.Query(sqlStmt)
-
+	rows, err := db.Query(sqlStmt)
 	if err != nil {
 		log.Fatal(err)
 	}
+
+	for rows.Next() {
+
+	}
+
 }
