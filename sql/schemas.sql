@@ -1,41 +1,41 @@
-CREATE TABLE IF NOT EXISTS curso(
+CREATE TABLE IF NOT EXISTS course(
   id INTEGER PRIMARY KEY,
-  curso TEXT NOT NULL
+  course TEXT NOT NULL
 );
 
-CREATE TABLE IF NOT EXISTS instrutor(
+CREATE TABLE IF NOT EXISTS instructor(
   id INTEGER PRIMARY KEY,
-  nome TEXT NOT NULL
+  name TEXT NOT NULL
 );
 
-CREATE TABLE IF NOT EXISTS participante(
+CREATE TABLE IF NOT EXISTS attendee(
   id INTEGER PRIMARY KEY,
-  nome TEXT NOT NULL,
+  name TEXT NOT NULL,
   cpf TEXT NOT NULl,
-  funcao TEXT NOT NULL,
-  diretoria TEXT NOT NULL,
-  empresa  TEXT NOT NULL,
-  filial TEXT NOT NULL
+  role TEXT NOT NULL,
+  board TEXT NOT NULL,
+  company  TEXT NOT NULL,
+  branch TEXT NOT NULL
 );
 
-CREATE TABLE IF NOT EXISTS evento(
+CREATE TABLE IF NOT EXISTS event(
  id INTEGER PRIMARY KEY,
- data_ini DATE NOT NULL,
- data_fim DATE NOT NULL,
- modalidade TEXT NOT NULL,
- duracao REAL NOT NULL,
- instrutor_id  INTEGER NOT NULL,
- curso_id INTEGER NOT NULL,
- FOREIGN KEY (instrutor_id) REFERENCES instrutor(id),
- FOREIGN KEY (curso_id) REFERENCES curso(id)
+ begin_date DATE NOT NULL,
+ end_date DATE NOT NULL,
+ modality TEXT NOT NULL,
+ duration REAL NOT NULL,
+ instructor_id  INTEGER NOT NULL,
+ course_id INTEGER NOT NULL,
+ FOREIGN KEY (instructor_id) REFERENCES instructor(id),
+ FOREIGN KEY (course_id) REFERENCES course(id)
 );
 
-CREATE TABLE IF NOT EXISTS participacao_evento(
+CREATE TABLE IF NOT EXISTS event_attendee(
   id INTEGER PRIMARY KEY,
-  evento_id INTEGER NOT NULL,
-  participante_id INTEGER NOT NULL,
+  event_id INTEGER NOT NULL,
+  attendee_id INTEGER NOT NULL,
   presenca INTEGER NOT NULL,
-  FOREIGN KEY (evento_id) REFERENCES evento(id),
-  FOREIGN KEY (participante_id) REFERENCES participante(id)
+  FOREIGN KEY (event_id) REFERENCES event(id),
+  FOREIGN KEY (attendee_id) REFERENCES attendee(id)
 );
 
