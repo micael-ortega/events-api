@@ -61,10 +61,10 @@ func CreateInstrutor(c *gin.Context) {
 	c.JSON(http.StatusCreated, novoInstrutor)
 }
 
-func DeleteInstrutor(c *gin.Context){
+func DeleteInstrutor(c *gin.Context) {
 	var id int16
 
-	if err :=c.ShouldBindJSON(&id); err != nil {
+	if err := c.ShouldBindJSON(&id); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
 	}
@@ -75,12 +75,12 @@ func DeleteInstrutor(c *gin.Context){
 
 	sqlStmt := "DELETE FROM instrutor WHERE id = (?)"
 
-	_,err :=db.Exec(sqlStmt, id)
+	_, err := db.Exec(sqlStmt, id)
 
 	if err != nil {
 		log.Fatal(err)
 		return
 	}
 
-	c.JSON(http.StatusNoContent, )
+	c.JSON(http.StatusNoContent, nil)
 }

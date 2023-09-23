@@ -20,8 +20,8 @@ CREATE TABLE IF NOT EXISTS participante(
 
 CREATE TABLE IF NOT EXISTS evento(
  id INTEGER PRIMARY KEY,
- data_ini TEXT NOT NULL,
- data_fim TEXT NOT NULL,
+ data_ini DATE NOT NULL,
+ data_fim DATE NOT NULL,
  modalidade TEXT NOT NULL,
  duracao REAL NOT NULL,
  instrutor_id  INTEGER NOT NULL,
