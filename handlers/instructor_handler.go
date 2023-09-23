@@ -1,7 +1,6 @@
 package handlers
 
 import (
-	"log"
 	"net/http"
 
 	"github.com/gin-gonic/gin"
@@ -20,7 +19,7 @@ func GetAllInstructors(c *gin.Context) {
 
 	rows, err := db.Query(sqlStmt)
 	if err != nil {
-		log.Fatal(err)
+		c.JSON(http.StatusBadRequest, gin.H{"error":err.Error()})
 	}
 
 	defer db.Close()
@@ -30,7 +29,7 @@ func GetAllInstructors(c *gin.Context) {
 		err := rows.Scan(&instructor.ID, &instructor.Name)
 
 		if err != nil {
-			log.Fatal(err)
+			c.JSON(http.StatusBadRequest, gin.H{"error":err.Error()})
 		}
 		instructos = append(instructos, instructor)
 	}
@@ -49,12 +48,12 @@ func CreateInstructor(c *gin.Context) {
 
 	defer db.Close()
 
-	sqlStmt := "INSERT INTO instructor (nome) VALUES (?)"
+	sqlStmt := "INSERT INTO instructor (name) VALUES (?)"
 
 	_, err := db.Exec(sqlStmt, newInstructor.Name)
 
 	if err != nil {
-		log.Fatal(err)
+		c.JSON(http.StatusBadRequest, gin.H{"error":err.Error()})
 		return
 	}
 
@@ -81,7 +80,7 @@ func DeleteInstructor(c *gin.Context) {
 	_, err := db.Exec(sqlStmt, request.ID)
 
 	if err != nil {
-		log.Fatal(err)
+		c.JSON(http.StatusBadRequest, gin.H{"error":err.Error()})
 		return
 	}
 

@@ -1,7 +1,6 @@
 package handlers
 
 import (
-	"log"
 	"net/http"
 	"strings"
 
@@ -21,17 +20,17 @@ func GetAllCourses(c *gin.Context) {
 
 	rows, err := db.Query(sqlStmt)
 	if err != nil {
-		log.Fatal(err)
+		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 	}
 
 	defer rows.Close()
 
 	var course models.Course
 	for rows.Next() {
-		scanErr := rows.Scan(&course.ID, &course.Course)
+		err := rows.Scan(&course.ID, &course.Course)
 
-		if scanErr != nil {
-			log.Fatal(scanErr)
+		if err != nil {
+			c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 			return
 		}
 		courses = append(courses, course)
@@ -40,9 +39,9 @@ func GetAllCourses(c *gin.Context) {
 
 }
 
-func GetCourseById(c *gin.Context){
+func GetCourseById(c *gin.Context) {
 	var request struct {
-		ID uint16 `json:"id"`
+		ID int `json:"id"`
 	}
 
 	if err := c.ShouldBindJSON(&request); err != nil {
@@ -53,6 +52,28 @@ func GetCourseById(c *gin.Context){
 	if request.ID == 0 {
 		c.JSON(http.StatusBadRequest, gin.H{"error": "ID is required"})
 	}
+
+	db := internals.OpenDb()
+
+	defer db.Close()
+
+	sqlStmt := "SELECT * FROM course WHERE id = ?"
+
+	row := db.QueryRow(sqlStmt, request.ID)
+
+	var course models.Course
+
+	err := row.Scan(
+		&course.ID,
+		&course.Course,
+	)
+
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		return
+	}
+	c.JSON(http.StatusOK, course)
+
 }
 
 func CreateCourse(c *gin.Context) {
@@ -64,11 +85,11 @@ func CreateCourse(c *gin.Context) {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
 	}
-	
+
 	if request.Course == "" {
 		c.JSON(http.StatusBadRequest, gin.H{"error": "Course is required"})
 		return
-	} 
+	}
 
 	db := internals.OpenDb()
 
@@ -76,18 +97,18 @@ func CreateCourse(c *gin.Context) {
 
 	sqlStmt := "INSERT INTO course (course) VALUES (?)"
 
-	var novoCourse models.Course
+	var newCourse models.Course
 
-	novoCourse.Course = strings.TrimSpace(request.Course)
+	newCourse.Course = strings.TrimSpace(request.Course)
 
-	_, err := db.Exec(sqlStmt, strings.ToTitle(novoCourse.Course))
+	_, err := db.Exec(sqlStmt, strings.ToTitle(newCourse.Course))
 
 	if err != nil {
-		log.Fatal(err)
+		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
 	}
 
-	c.IndentedJSON(http.StatusCreated, novoCourse)
+	c.IndentedJSON(http.StatusCreated, newCourse)
 }
 
 func DeleteCourse(c *gin.Context) {
@@ -109,10 +130,9 @@ func DeleteCourse(c *gin.Context) {
 	_, err := db.Exec(sqlStmt, request.ID)
 
 	if err != nil {
-		log.Fatal(err)
+		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
 	}
 
 	c.JSON(http.StatusNoContent, nil)
 }
-
