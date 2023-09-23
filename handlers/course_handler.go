@@ -136,3 +136,19 @@ func DeleteCourse(c *gin.Context) {
 
 	c.JSON(http.StatusNoContent, nil)
 }
+
+func CheckIfCourseExists(id int)(bool){
+	var courseExists bool
+	db := internals.OpenDb()
+
+	defer db.Close()
+	err := db.QueryRow("SELECT EXISTS (SELECT 1 FROM course WHERE id = ?)", id).Scan(&courseExists)
+	if err != nil {
+		return false
+	}
+	
+	if !courseExists {
+		return false
+	}
+	return true
+}

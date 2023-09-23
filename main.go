@@ -13,5 +13,9 @@ func main() {
 	router.GET("/instructor", handlers.GetAllInstructors)
 	router.POST("/instructor", handlers.CreateInstructor)
 	router.DELETE("/instructor", handlers.DeleteInstructor)
+	router.GET("/event", handlers.GetAllEvents)
+	router.POST("/event", handlers.CreateEvent)
+	router.GET("/event/:id", handlers.GetEventById)
+	router.DELETE("/event", handlers.DeleteEvent)
 	router.Run(":8080")
 }
