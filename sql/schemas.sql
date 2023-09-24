@@ -34,8 +34,13 @@ CREATE TABLE IF NOT EXISTS event_attendee(
   id INTEGER PRIMARY KEY,
   event_id INTEGER NOT NULL,
   attendee_id INTEGER NOT NULL,
-  presenca INTEGER NOT NULL,
+  status INTEGER NOT NULL,
   FOREIGN KEY (event_id) REFERENCES event(id),
   FOREIGN KEY (attendee_id) REFERENCES attendee(id)
 );
 
+CREATE TABLE IF NOT EXISTS user(
+  id INTEGER PRIMARY KEY,
+  username TEXT UNIQUE NOT NULL,
+  password_hash TEXT NOT NULL,
+);
