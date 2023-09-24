@@ -36,7 +36,6 @@ func GetAllCourses(c *gin.Context) {
 		courses = append(courses, course)
 	}
 	c.IndentedJSON(http.StatusOK, courses)
-
 }
 
 func GetCourseById(c *gin.Context) {
@@ -73,7 +72,6 @@ func GetCourseById(c *gin.Context) {
 		return
 	}
 	c.JSON(http.StatusOK, course)
-
 }
 
 func CreateCourse(c *gin.Context) {
@@ -124,6 +122,13 @@ func DeleteCourse(c *gin.Context) {
 	db := internals.OpenDb()
 
 	defer db.Close()
+
+	courseExists := CheckIfCourseExists(request.ID)
+
+	if !courseExists {
+		c.JSON(http.StatusBadRequest, gin.H{"error": "Course with specified ID does not exist"})
+		return
+	}
 
 	sqlStmt := "DELETE FROM course WHERE id = (?)"
 
