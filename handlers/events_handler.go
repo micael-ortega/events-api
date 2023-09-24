@@ -10,14 +10,18 @@ import (
 )
 
 func GetAllEvents(c *gin.Context) {
-	var events []models.Event
+	var events []models.EventResponse
 
 	db := internals.OpenDb()
 
 	defer db.Close()
 
 	sqlStmt := `
-		SELECT e.id, e.begin_date, e.end_date, e.modality, e.duration,
+		SELECT e.id, 
+			e.begin_date, 
+			e.end_date, 
+			e.modality, 
+			e.duration,
 			i.id AS instructor_id, 
 			i.name AS instructor_name, 
 			c.id AS course_id, 
@@ -34,9 +38,11 @@ func GetAllEvents(c *gin.Context) {
 
 	defer db.Close()
 
-	var event models.Event
+
+	var event models.EventResponse
 	for rows.Next() {
-		err := rows.Scan(&event.ID,
+		err := rows.Scan(
+			&event.ID,
 			&event.Begin_date,
 			&event.End_date,
 			&event.Modality,
@@ -81,7 +87,7 @@ func GetEventById(c *gin.Context) {
 
 	row := db.QueryRow(sqlStmt, id)
 
-	var event models.Event
+	var event models.EventResponse
 
 	err = row.Scan(
 		&event.ID,
@@ -111,7 +117,7 @@ func CreateEvent(c *gin.Context) {
 		return
 	}
 
-	if newEvent.Begin_date.IsZero() || newEvent.End_date.IsZero() {
+	if newEvent.Begin_date == "" || newEvent.End_date == "" {
 		c.JSON(http.StatusBadRequest, gin.H{"error": "Both date fields are required"})
 		return
 	}
@@ -121,12 +127,12 @@ func CreateEvent(c *gin.Context) {
 		return
 	}
 
-	if newEvent.Instructor.ID == 0 {
+	if newEvent.Instructor == 0 {
 		c.JSON(http.StatusBadRequest, gin.H{"error": "Instructor must be assigned to event"})
 		return
 	}
 
-	if newEvent.Course.ID == 0 {
+	if newEvent.Course == 0 {
 		c.JSON(http.StatusBadRequest, gin.H{"error": "Course must be assigned to event"})
 		return
 	}
@@ -135,15 +141,14 @@ func CreateEvent(c *gin.Context) {
 
 	defer db.Close()
 
-	instructorExists := CheckIfInstructorExists(newEvent.Instructor.ID)
+	instructorExists := CheckIfInstructorExists(newEvent.Instructor)
 
 	if !instructorExists {
 		c.JSON(http.StatusBadRequest, gin.H{"error": "Instructor with specified ID does not exist"})
 		return
 	}
 
-
-	courseExists := CheckIfCourseExists(newEvent.Course.ID)
+	courseExists := CheckIfCourseExists(newEvent.Course)
 
 	if !courseExists {
 		c.JSON(http.StatusBadRequest, gin.H{"error": "Course with specified ID does not exist"})
@@ -163,8 +168,8 @@ func CreateEvent(c *gin.Context) {
 
 	_, err := db.Exec(sqlStmt, newEvent.Begin_date,
 		newEvent.End_date, newEvent.Modality,
-		newEvent.Duration, newEvent.Instructor.ID,
-		newEvent.Course.ID)
+		newEvent.Duration, newEvent.Instructor,
+		newEvent.Course)
 
 	if err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
@@ -174,7 +179,9 @@ func CreateEvent(c *gin.Context) {
 	c.JSON(http.StatusCreated, newEvent)
 }
 
-func UpdateEvent(c *gin.Context) {}
+func UpdateEvent(c *gin.Context) {
+	// TODO 
+}
 
 func DeleteEvent(c *gin.Context) {
 	var request struct {
