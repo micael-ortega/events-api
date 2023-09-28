@@ -15,3 +15,17 @@ Just following the tutorials from [https://go.dev/doc/tutorial/]() and asking to
 ~~After writting this README file I realized that some of variables and functions declared here looks weird because it blends Portuguese and English words, sometimes at the same declaration.~~
 
 My work on making this source code not look weird by mixing idioms on declaring variable so far seems to be done.
+
+> So I was just wondering,
+
+> yesterday I did not make a commit
+
+> There is just this thought
+
+> that we must build rome in one day,
+
+> not decades
+
+> There are things in life that will take time
+
+> So I'm taking mine and enjoying progress
